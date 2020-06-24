@@ -24,6 +24,8 @@ export default class ContentList {
     this.onContentScroll = null
 
     this.newsDataCache = {}
+    this.htmlCache = {}
+    this.isFromNavClick = false /* 用于判断是否从nav点击切换内容 */
   }
 
   init (opt) {
@@ -36,7 +38,7 @@ export default class ContentList {
   }
   
   _initData (opt) {
-    this.pageIndex = 0
+    this.pageIndex = (opt && opt.pageIndex) || 0
     this.pageCount = (this.newsDataCache[this.field] && this.newsDataCache[this.field].length) || 0
     if (opt) {
       for (const key in opt) {
@@ -78,7 +80,7 @@ export default class ContentList {
     const viewHeight = window.innerHeight,
           screenBottomOffset = $lastItem[0].getBoundingClientRect().bottom
     if (screenBottomOffset - viewHeight <= 8) {
-      if (this._canAppendData()) {
+      if (this._canAppend()) {
         /* 防止多次触发 */
         if (!this._tipLockStatus()) {
           this._tipLock()
@@ -94,7 +96,7 @@ export default class ContentList {
       }
     }
   }
-  _canAppendData () {
+  _canAppend () {
     return this.pageIndex < this.pageCount - 1
   }
 
@@ -114,6 +116,16 @@ export default class ContentList {
   }
 
   async _renderData (field, pageItemLen, isAppend) {
+    if (this.htmlCache[this.field] && this._isFromNavClick()) {
+      this._clearIsFromNavClick()
+      this._renderDataFromCache()
+    } else {
+      await this._renderDataFromNet(field, pageItemLen, isAppend)
+    }
+    this._afterRenderData()
+  }
+
+  async _renderDataFromNet (field, pageItemLen, isAppend) {
     const data = await this._getNewsData(field, pageItemLen)
     if (!isAppend) {
       if (data === 404) {
@@ -124,9 +136,35 @@ export default class ContentList {
     } else {
       this.$contentList.append(this.contentItemComponent.tpl(data, this.pageIndex, OPT.INDEX_LOADING_OPT))
     }
+    data !== 404 && this._rememberHtml()
+  }
+
+  _renderDataFromCache () {
+    const contentData = this.htmlCache[this.field],
+          pageIndex = contentData.pageIndex,
+          pageCount = contentData.pageCount,
+          strHtml = contentData.html
+
+    this.pageIndex = pageIndex
+    this.pageCount = pageCount
+    this.$contentList.html(strHtml)
+  }
+  
+  _afterRenderData () {
     this._clearBottomTip()
     this.lazyLoad.setImgs()
     this._tipUnlock()
+  }
+
+  _rememberHtml () {
+    const contentHtml = this.$contentList.html(),
+          cacheData = {}
+
+    cacheData.pageIndex = this.pageIndex
+    cacheData.pageCount = this.pageCount
+    cacheData.html = contentHtml
+
+    this.htmlCache[this.field] = cacheData
   }
 
   _renderLoading () {
@@ -174,5 +212,15 @@ export default class ContentList {
   }
   _tipUnlock () {
     this.tipLock = false
+  }
+
+  _isFromNavClick () {
+    return this.isFromNavClick
+  }
+  setIsFromNavClick () {
+    this.isFromNavClick = true
+  }
+  _clearIsFromNavClick () {
+    this.isFromNavClick = false
   }
 }

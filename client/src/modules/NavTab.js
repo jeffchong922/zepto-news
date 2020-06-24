@@ -44,6 +44,7 @@ export default class NavTab {
   }
 
   _contentChange (field) {
+    this.instance.setIsFromNavClick()
     this.instance.init({
       field
     })
