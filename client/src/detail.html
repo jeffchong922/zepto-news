@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no">
+  <title><%= htmlWebpackPlugin.options.title %></title>
+  <script type="text/javascript">
+    /* 确保页面存在数据 */
+    if (!sessionStorage.getItem('news-data')) {
+      window.location.href = 'index.html'
+    }
+  </script>
+</head>
+<body>
+  <div id="app">
+  </div>
+  <script src="https://cdn.bootcdn.net/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+  <!-- <script src="https://cdn.bootcdn.net/ajax/libs/fastclick/1.0.6/fastclick.min.js"></script> -->
+  <script type="text/javascript">
+    document.documentElement.style.fontSize = (document.documentElement.clientWidth / 37.5) + 'px'
+
+    /*
+    * default: 16px = 1rem
+    *    p -> font-size: 1rem = 16px
+    * want: 16px = 1.6rem
+    *    iPhone6: 16px -> 10px, 375 / 37.5 = 10 px = 1rem
+    *    iPhone6 P: 441 /37.5 = 11.76 px = 1rem
+    */
+
+    /*
+      window.addEventListener('load', function () {
+        FastClick.attach(document.body)
+      }, false)
+    */
+
+    /* 阻止多点触控 */
+    document.documentElement.addEventListener('touchmove', function (e) {
+      if (event.touches.length > 1) {
+        e.preventDefault()
+      }
+    }, false)
+  </script>
+</body>
+</html>

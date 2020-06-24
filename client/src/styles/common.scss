@@ -1,0 +1,37 @@
+@import './iconfont.css';
+
+html {
+  // height: 100%;
+  font-size: 1.2rem;
+  // touch-action: none;
+  
+  body {
+    // height: 100%;
+    margin: 0;
+
+    h1,h2,h3,h4,h5,h6,p {
+      font-weight: normal;
+      margin: 0;
+    }
+
+    a {
+      text-decoration: none;
+      color: #000;
+      border: none;
+    }
+
+    img {
+      width: 100%;
+    }
+
+    #app {
+      position: relative;
+      min-height: 100vh;
+      background-color: #f5f7f5;
+
+      .container {
+        height: 100%;
+      }
+    }
+  }
+}

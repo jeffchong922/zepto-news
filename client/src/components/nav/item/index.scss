@@ -1,0 +1,15 @@
+.nav-list {
+  .nav-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 6rem;
+    &.nav-item__active {
+      color: #ec7a70;
+    }
+    
+    h2 {
+      font-size: 1.6rem;
+    }
+  }
+}

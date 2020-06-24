@@ -1,0 +1,1 @@
+<div class="iframe-wrapper"><iframe src="{{new_url}}" frameborder="0" width="100%" height="100%" id="js-news-frame"></iframe></div>

@@ -1,0 +1,5 @@
+@baseUrl=http://localhost:8848/tt-news
+@json=Content-Type: application/json
+
+###
+GET {{baseUrl}}/get-news
