@@ -15,15 +15,12 @@ module.exports = (app) => {
             data = dataCache.getData(field)
       
       if (!data) {
-        console.log('not from cache')
         const response = await fetch(`http://v.juhe.cn/toutiao/index?type=${field}&key=${process.env.JUHE_APPKEY}`)
         const jsonData = await response.json()
         if (!jsonData.result) {
           return res.status(404).jsonp([])
         }
         dataCache.setData(field, jsonData.result.data)
-      } else {
-        console.log('from cache')
       }
       data = dataCache.getData(field)
       res.jsonp(data)
